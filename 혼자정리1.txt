@@ -1,0 +1,165 @@
+oracle DBMS
+
+Enterprise 버전 :  실제 회사에서 사용
+
+Express 버전 : 교육/ 개인
+
+oracle express editon 다운 후 설치
+
+oracle 서버 설치 관리자 2개 sys, system
+
+oracle 관리자 계정 :  system
+
+oracle 관리자 비밀번호 :  oracle
+
+summary 확인 -> oracle 기본 port : 1521,  mysql 기본 port : 3306
+
+ip : 고유한 주소
+
+port : 같은 ip 내에 구분할 수 있는 번호
+
+내부에서 oracle과 같은 네트워크 프로그램에 접근 시 localhost(내부 ip 127.0.0.1)
+
+네트워크 접근 방법 : 내부에서 접근(localhost), 외부에서 접근
+
+ex) oracle로 접근 시 1521로, Tomcat으로 접근 시 8080
+
+oracle내부 Tomcat과 Java내부 Tomcat 충돌 주의
+
+Java내부 Tomcat의 port를 oracle내부 Tomcat과 다른 port로 변경해야함
+
+내부에서 oracle 접근 경로 ip : localhost, port : 1521, service : xe(oracle내부 service이름)
+
+sql*plus(기본 설치) -> text 기반 cmd를 통해 확인
+
+path설정 : 명령어를 임의의 위치에서 사용 가능하도록 경로 설정해줌
+
+path설정 값 보기 (cmd에서 set path)
+
+path설정 및 제거 시작버튼 우클릭  -> 시스템 -> 고급 시스템 설정 -> 고급 -> 환경 변수
+
+sqlplus  cmd로 접속 sqlplus system(id)/oracle(password)
+
+tool -> 무료 sqldeveloper -> oracle버전이 높으면 포함되어있음 (자바로 만들었기 떄문에 jdk 필요(jdk포함버전도 있음 jre)) -> gui기반
+
+ctrl + enter -> sql 시트 실행
+
+2개의 계정 생성 -> 계정 생성은 관리자만 가능
+
+계정생성 명렁어 
+
+create user workshop identified by workshop;
+
+권한 설정
+
+grant resource, connect to workshop;
+
+sqldeveloper에서 sql문 실행
+
+sql문 복붙 or @경로 ex) @c:\script.txt
+
+
+관계형 데이터베이스는 2차원테이블 형식으로 데이터를 관리함
+
+열은 컬럼, 행은 레코드
+
+모든 컬럼에 데이터가 항상 존재해야되는 것은 아니다. 데이터가 없는 값을 null값
+
+무결성 : 결점이 없는 데이터
+
+제약조건을 통해 무결성을 지켜준다.
+
+제약조건 
+
+1. primary key
+
+테이블당 한개만, 유일한 값 저장(레코드 식별가능), null값 허용 x
+
+자동으로 인덱스 생성
+
+인덱스 : 테이블에 저장된 데이터의 검색 속도를 향상 시키기 위함
+
+2. unique
+
+유일한 값만 저장하고 null값 허용
+
+자동으로 인덱스 생성 -> 검색속도 빠름
+
+primary key는 테이블당 1개, unique는 여러개 지정 가능
+
+3. not null
+
+반드시 값을 저장해야 함
+
+기본적으로 table은 null을 허용하지만 not null로 기능 변경을 해서 null값 허용x
+
+테이블 당 여러개 지정 가능
+
+4. check
+
+컬럼에 저장되는 값의 범위 지정(ex) 성별은 남 혹은 여 형식의 데이터 값만 저장 할 수 있게 함)
+
+여러번 지정 가능
+
+5. foreign key
+
+다른 테이블을 참조할 때 사용
+
+참조당하는 쪽이 master, 참조 하는 쪽이 slave
+
+fk는 반드시 master테이블의 아무 컬럼이나 참조하지 못하고 master의 pk 또는 unique만 참조할 수 있다.(null값도 가능)
+
+
+
+SQL(Structured Query Language)
+
+종류 ansi, 의존적 sql문
+
+테이블 검색
+
+DQL(데이터 질의어) : SELECT (컬럼 단위 검색 projection, 행 단위 검색 selection, 테이블 연결하여 검색 join)
+
+DML( 데이터 조작어 ) : INSERT DELETE UPDATE MERGE(안에 DELETE,UPDATE등이 속해 있음)
+
+DDL(데이터 정의어) : CREATE ALTER DROP RENAME TRUNCATE(DB의 객체 생성,변경,삭제, 이름변경, 정보 절삭)
+
+DDL은 DML과 다르고 자동으로 COMMIT 즉 물리적 파일에 바로 반영이 된다. ROLLBACK 불가
+
+DDL자동 커밋이기 때문에 DML과 사용할 때 주의!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+5가지 객체
+
+테이블
+
+인덱스 : 테이블 검색속도 향상
+
+뷰 : 테이블의 데이터 보호(비밀번호와 같은 중요한 정보를 제외시킨 것을 뷰라고 함), sql문 간소화 
+
+시퀀스 : 테이블의 특정 컬럼 값을 자동으로 numbering할 때 사용 ex) 게시판 글 번호 자동으로 +1시켜줌, mysql에선 autoincrement
+
+시노님 : 테이블 명을 별칭으로 할 때 사용 ex) emp -> e
+
+TCL(트랜잭션 처리어) : COMMIT ROLLBACK SAVEPOINT
+
+DCL(데이터 제어어) : GRANT REVOKE
+
+
+SYSAUX.DBF, SYSTEM.DBF는 메타데이터에 관한 정보가 담김
+
+메모리상에서 DML이 이루어지고, TCL을 통해 실제 파일에 적용할 것 인지(COMMIT),
+
+아니면 취소하고(ROLLBACK) 메모리에서만 적용될 것 인지를 정한다.
+
+
+DML과 TCL을 연관지어 생각하기
+
+
+트랜잭션
+
+여러의 작업이 하나의 작업처럼 동작하도록 묶음
+
+특징 : 작업이 모두 성공했을 때만 COMMIT, 하나라도 실패 시 ROLLBACK
+
+ACID특성 : 원자성, 일관성, 격리성, 지속성
+
+
