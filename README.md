@@ -1,7 +1,9 @@
 # SQL_study
 
-oracle DB설치 및 테스트
+SQL 공부하기 1일차
 
-- [백준](https://github.com/do-bby/Algoritm/tree/main/BaekJoon)
+- [oracle DB](https://github.com/do-bby/SQL_study/blob/main/%ED%98%BC%EC%9E%90%EC%A0%95%EB%A6%AC1.txt)
 
-SQL-select
+SQL 공부하기 2일차
+
+- [SELECT](https://github.com/do-bby/SQL_study/blob/main/%ED%98%BC%EC%9E%90%20%EC%A0%95%EB%A6%AC2.txt)
