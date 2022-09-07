@@ -1,0 +1,309 @@
+SQL Language 문서
+https://docs.oracle.com/en/database/oracle/oracle-database/21/sqlrf/Single-Row-Functions.html#GUID-AC0E8A99-5097-4147-8295-C88EAC5AA362
+
+
+
+함수
+
+단일 행 함수 : 행 단위 적용
+
+다중 행 함수(그룹 함수, group by) : 그룹핑 적용(묵시적 : 컬럼단위로, 명시적 : ex)성별,학년별,부서별)
+
+INITCAP
+
+SELECT INITCAP('ORACLE SQL')
+FROM dual;
+
+dual 테이블은 모든 계정에서 지원해주는 테이블
+
+INITCAP('CHAR') 문자 하나만 가능
+
+UPPER
+
+SELECT last_name, salary
+FROM employees
+WHERE UPPER(last_name)='KING';
+
+리터럴은 대소문자 구별하기 때문에 UPPER로 리터럴값과 비교
+
+CONCAT
+
+SELECT CONCAT( last_name, salary)
+FROM employees;
+
+두 컬럼을 하나의 데이터로 출력할 때 CONCAT
+
+SELELCT CONCAT('Oracle','Sql'), 'Oracle' || 'Sql'
+from dual;
+0
+LENGTH
+
+SELECT last_name, LENGTH(last_name)
+FROM employees;
+
+
+INSTR
+
+SELECT INSTR('MILLER' , 'L', 1 , 2 ) -> 1은 시작 위치, 2는 몇번째로 나오는 문자인지
+FROM dual;
+
+
+SUBSTR
+
+SELECT SUBSTR('900303-1234567' , 8 , 1 ) -> 8번째 자리부터 시작, 1개의 문자를 반환
+FROM dual;
+
+SELECT SUBSTR('900303-1234567' , 8) -> 8번째 자리부터 시작, 이후 나머지 문자 반환
+FROM dual;
+
+SELECT hire_date 입사일, SUBSTR(hire_date,1,2) 입사년도 
+FROM employees;
+
+
+REPLACE
+
+SELECT REPLACE('JACK and JUE' , 'J' , 'BL' ) J찾아서 BL로 바꿔라
+FROM dual;
+
+
+LPAD
+
+SELECT LPAD('MILLER' , 10 , '*' ) MILLER을 10자리로 표시하는데 비어있는 자리는 왼쪽부터  *로 채워라 (*와 같은 문자 지정안하면 공백으로 표시)
+FROM dual;
+
+RPAD
+
+SELECT RPAD('MILLER' , 10 , '*' ) MILLER을 10자리로 표시하는데 비어있는 자리는 오른쪽부터  *로 채워라
+FROM dual;
+
+
+TRIM -> 기본 공백 삭제 + 특정 문자 삭제
+
+LTRIM 
+
+SELECT LTRIM('MILLER', 'M')
+FROM dual;
+
+RTRIM
+
+SELECT RTRIM('MILLER', 'R')
+FROM dual;
+
+
+SELECT TRIM( LEADING '0' FROM '0001234567000' ) -> 왼쪽 0을 없애줌
+FROM dual;
+
+SELECT TRIM( TRAILING '0' FROM '0001234567000' ) -> 오른쪽 0을 없애줌
+FROM dual;
+
+SELECT TRIM( BOTH '0' FROM '0001234567000' ) -> 양쪽 0을 없애줌
+FROM dual;
+
+oracle에선 %가 LIKE연산에 쓰이므로 나머지연산을 사용할 땐 MOD를 사용한다
+
+
+ROUND 반올림, TRUNC 절삭, MOD 나머지연산, CEIL 올렸을 떄 가장 최소값, FLOOR 내렸을 떄 가장 최댓값, SIGN 양수인지 음수인지 0인지
+
+SELECT ROUND( 456.789, 2 ) 반올림해서 두번째자리까지 
+FROM dual;
+
+ROUND(456.789) -> 456쪽은 음의 자릿수 789는 양의 자릿수 소수점은 0
+
+
+SELECT TRUNC( 456.789, 2 ) -> 456.78
+FROM dual;
+
+SELECT TRUNC( 456.789, -1 ) -> 450
+FROM dual;
+
+SELECT MOD( 10 , 3 ) , MOD( 10 , 0 )
+FROM dual;
+
+
+SELECT CEIL(10.6), CEIL(-10.6)
+FROM dual;
+
+SELECT FLOOR(10.6), FLOOR(-10.6)
+FROM dual;
+
+
+SELECT SIGN(100),SIGN(0),SIGN(-1) -> 양수이면 1 음수이면 -1 0이면 0
+FROM DUAL;
+
+
+
+날짜 조회
+
+SELECT SYSDATE FROM DUAL;
+
+
+SELECT SYSDATE 오늘 SYSDATE+1 내일 SYSDATE-1 어제  FROM DUAL;
+
+
+근무월수 구하기
+
+MONTH BETWEEN(A,B)
+
+SELECT last_name, hire_date, TRUNC(MONTHS_BETWEEN(sysdate, hire_date) "근무 월수" FROM employees
+ORDER BY 3 desc;
+
+
+나이
+
+select entrance_date from tb_student;
+select student_no,student_name
+from tb_student
+where to_number(to_char(entrance_date, 'yyyy')) - to_number(to_char(to_date(substr(student_ssn,1,2),'rr'), 'yyyy'))>19
+order by 1;
+
+
+Day를 더할때는 sysdate + number
+
+month를 더할 때는 ADD_MONTH
+
+SELECT sysdate 현재, ADD_MONTHS(sysdate,1) 다음달,
+ ADD_MONTHS(sysdate,-1) 이전달
+FROM dual;
+
+
+NEXT_DAY(hire_date '금') 지정된 날짜와 가장 가까운 요일
+
+select next_day(sysdate, '금') from dual; 오늘이 9/7이면 결과는 9/9로 나옴
+
+select next_day(sysdate, '금'), next_day(sysdate, '금요일'), next_day(sysdate, 6) from dual;
+
+
+select last_day(add_months(sysdate,1)) from dual; -> 지정한 달의 마지막 날짜를 구함
+
+SELECT last_name, hire_date, -> 날짜 ROUND함수 적용
+ ROUND(hire_date,'YEAR'),
+ ROUND(hire_date,'MONTH')
+FROM employees;
+
+
+SELECT last_name, hire_date, ->  날짜 TRUNC함수 적용
+ TRUNC(hire_date,'YEAR'),
+ TRUNC(hire_date,'MONTH')
+FROM employees;
+
+
+
+변환함수
+
+data type 변경되는 함수 
+
+1. 묵시적 방법(자동 변환)
+
+날짜 -> 문자열 (90/01/01 -> '90/01/01') 날짜 문자 숫자 동일
+
+ex) SELECT last_name, salary
+FROM employees
+WHERE salary = '17000'; --문자 17000이 숫자 17000로 자동 형 변환
+
+
+2. 명시적 방법(함수 이용)
+
+날짜 -> 문자열(to_char()) 함수적용 각각 데이터 타입에 맞는 함수 적용
+
+
+SELECT SYSDATE, TO_CHAR(SYSDATE, 'YYYY'),
+TO_CHAR(SYSDATE, 'RRRR'), TO_CHAR(SYSDATE, 'YY'),
+TO_CHAR(SYSDATE, 'MM'),
+TO_CHAR(SYSDATE, 'MON'), --월
+TO_CHAR(SYSDATE, 'DAY'), --요일
+TO_CHAR(SYSDATE, 'DY'),  --약어로 EX 수
+TO_CHAR(SYSDATE, 'DD')FROM DUAL;
+
+
+SELECT TO_CHAR(SYSDATE, 'AM'), 
+TO_CHAR(SYSDATE, 'HH'),
+TO_CHAR(SYSDATE, 'HH24'),
+TO_CHAR(SYSDATE, 'MI'),
+TO_CHAR(SYSDATE, 'SS')
+FROM DUAL;
+
+
+SELECT TO_CHAR(SYSDATE, ' YYYY "년" MM "월" DD "일" ') 날짜
+FROM dual;
+
+작은 따옴표안에 "년"과 같이 큰 따옴표를 써야한다
+
+
+SELECT last_name, salary,
+ TO_CHAR(salary, '$999,999') 달러,
+ TO_CHAR(salary, 'L999,999') 원화
+FROM employees;
+
+9는 자릿수를 나타내고 $,L은 단위를 표시
+
+ex) 1111, 99.99 -> 11.11 소수점아래를 기준으로 맞춘다.
+
+
+화폐 단위, 년 월 일, 시 분 초 와 같은 포맷은 db에 같이 저장하면 안됨 -> db에 포맷만큼의 바이트가 필요하기 때문
+
+
+SELECT TO_NUMBER('123')+100 FROM DUAL; -> 형변환을 하지 않아도 계산이 되지만 가독성이 높기 때문에 TO_NUMBER 권장
+
+SELECT TO_NUMBER('123') -> O
+
+SELECT TO_NUMBER('123,456') ->  X -> SELECT TO_NUMBER('123,456','999,999') -> O
+
+형 변환 함수 (TO_DATE, TO_NUMBER, TO_CHAR)
+
+ALTER SESSION SET NLS_DATE_FORMAT='YYYY/MM/DD HH24:MI:SS'; -> RR/MM/DD의 날짜 포맷에서 YYYY/MM/DD형태로 포맷 변경
+
+
+
+
+조건 함수
+
+DECODE - 조건이 반드시 일치하는 경우 사용하는 함수 (오라클에서만 사용)
+
+DECODE는 동등 연산자(=)만 사용함
+
+
+CASE - 조건이 반드시 일치하지 않아도 범위 및 비교가 가능한 경우에 사용 (ANSI)
+
+CASE는 <,>,= 모든 연산자를 사용할 수 있다 
+
+
+DECODE
+
+SELECT last_name,salary, -> salary가 24000이면 *0.3, 17000이면 *0.2, 둘다 아니면 *1
+ DECODE(salary,24000, salary*0.3,
+ 17000, salary*0.2,
+ salary) 보너스
+FROM employees
+ORDER BY 2 desc;
+
+
+CASE
+
+SELECT last_name,salary,
+ CASE salary WHEN 24000 THEN salary*0.3
+ WHEN 17000 THEN salary*0.2
+ ELSE salary
+ END 보너스 FROM employees
+ORDER BY 2 desc;
+
+
+SELECT last_name,salary,
+ CASE WHEN salary >=20000 THEN 1000
+ WHEN salary >=15000 THEN 2000
+ WHEN salary >=10000 THEN 3000
+ ELSE 4000
+ END 보너스 FROM employees
+ORDER BY 2 desc;
+
+
+
+SELECT last_name,salary,
+ CASE WHEN salary BETWEEN 20000 AND 25000 THEN '상'
+ WHEN salary BETWEEN 10000 AND 20001 THEN '중'
+ ELSE '하'
+ END 등급 FROM employees
+ORDER BY 2 desc;
+
+
+
+
